@@ -1,0 +1,112 @@
+#!/usr/bin/env python
+
+# builds the squarespace.github.io static site
+
+import codecs
+import getpass
+import os
+import sys
+import traceback
+
+
+ROOT = os.path.abspath(os.path.dirname(__file__))
+PREFIX = '[rebuild] '
+
+WARNING = '''
+
+NOTE: This file is auto-generated. Please edit templates/index.html and rebuild.
+
+'''
+
+E_ERROR = 'An error occurred: %s\n'
+E_IMPORT = 'Failed to locate a module: %s\n'
+E_LOGIN = 'Failed to login to Github: %s\n'
+E_NOREPO = 'Unknown repository: %s\n'
+E_RATELIM = 'NOTE: rate limiting of %s calls per minute is in effect..\n\n'
+E_RUNPIP = 'You may need to run "pip install -r requirements.txt"\n'
+
+
+def flush(stm, msg, fail=0):
+    stm.write(msg)
+    stm.flush()
+    if fail:
+        sys.exit(1)
+
+
+emit = lambda m: flush(sys.stdout, m)
+info = lambda m: flush(sys.stdout, PREFIX + m)
+fail = lambda m: flush(sys.stderr, PREFIX + m, 1)
+read = lambda p: codecs.open(p, 'r', 'utf-8').read()
+validline = lambda v: v and not v[0] == '#'
+readlines = lambda p: [v for v in read(p).split('\n') if validline(v)]
+write = lambda p, d: codecs.open(p, 'w', 'utf-8').write(d)
+rootpath = lambda *n: os.path.join(ROOT, *n)
+read_template = lambda n: read(os.path.join(ROOT, 'templates', n))
+
+
+try:
+    from github import Github, GithubException, UnknownObjectException
+    from jinja2 import Environment
+    import requests
+except ImportError, e:
+    fail((E_IMPORT % e) + E_RUNPIP)
+
+
+def login():
+    info('Authenticating to Github. (blank == anonymous)\n')
+    username = raw_input('username: ')
+    if username:
+        password = getpass.getpass('password: ')
+    try:
+        if not username:
+            client = Github()
+        else:
+            client = Github(username, password)
+        _, limit = client.rate_limiting
+        if limit:
+            info(E_RATELIM % limit)
+        return client
+
+    except Exception, e:
+        fail(E_LOGIN % e)
+
+
+def fetch_repos(client, names):
+    for name in names:
+        try:
+            path = 'squarespace/' + name
+            info('Fetching information for %r repository..\n' % path)
+            repo = client.get_repo(path)
+        except UnknownObjectException, e:
+            info('Error: failed to locate "%s"\n' % path)
+            continue
+        except GithubException, e:
+            # more serious error occurred, abort..
+            err = '\n' + traceback.format_exc(e)
+            fail(E_ERROR % err)
+
+        yield dict(
+            name=repo.name,
+            homepage=repo.homepage,
+            url=repo.html_url,
+            description=repo.description)
+
+
+def main():
+
+    # contact github, fetch repository info
+    client = login()
+    names = readlines(rootpath('repos.txt'))
+    repos = list(fetch_repos(client, names))
+
+    # rebuild index
+    source = read(rootpath('templates', 'index.html'))
+    template = Environment().from_string(source)
+    result = template.render(repos=repos, warning=WARNING)
+    write(rootpath('index.html'), result)
+
+
+if __name__ == '__main__':
+    main()
+
+
