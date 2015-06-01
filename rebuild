@@ -86,7 +86,7 @@ def fetch_repos(client, names):
             fail(E_ERROR % err)
 
         yield dict(
-            name=repo.name,
+            name=repo.name.replace('-', ' ').title(),
             homepage=repo.homepage,
             url=repo.html_url,
             description=repo.description)
