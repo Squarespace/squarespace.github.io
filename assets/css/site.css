@@ -47,7 +47,7 @@ h1, h2, h3, h4 {
     padding: 30px 25px;
 }
 
-@media (min-width: 500px) {
+@media (min-width: 800px) {
     .gutters {
         padding: 30px 50px;
     }
@@ -64,10 +64,6 @@ h1, h2, h3, h4 {
     top: 0;
     width: 100%;
     z-index: 1;
-
-    /* Overriding standard gutters. */
-    padding-top: 15px;
-    padding-bottom: 15px;
 }
 
     .header a {
@@ -94,34 +90,130 @@ h1, h2, h3, h4 {
         width: 110px;
     }
 
+.logo,
+.nav-mobile-toggle {
+    display: inline-block;
+    margin-top: 6px;
+    vertical-align: middle;
+}
+
+.logo {
+    margin-bottom: 0;
+    margin-top: 0;
+    width: calc(100% - 47px);
+}
+
+.nav {
+    background-color: rgba(25, 25, 25, 0.95);
+    height: 100%;
+    left: 0;
+    position: fixed;
+    opacity: 0;
+    top: 0;
+    visibility: hidden;
+    width: 100%;
+
+    transition: opacity 0.5s ease, visibility 0s 0.6s linear;
+}
+
     .nav a {
         color: #fff;
-        font-size: 0.8em;
+        display: block;
         font-weight: 500;
         letter-spacing: 0.05em;
         padding: 20px;
         position: relative;
+        text-align: center;
         text-transform: uppercase;
-        top: 3px;
+        width: 100%;
     }
 
-.logo,
-.nav {
-    display: inline-block;
-    text-align: center;
-    vertical-align: middle;
+.nav.mobile-nav-open {
+    opacity: 1;
+    visibility: visible;
+
+    transition: opacity 0.5s ease;
+}
+
+.nav .nav-inner {
+    position: relative;
+    top: 50%;
+    transform: translatey(-50%);
+}
+
+.nav-mobile-toggle {
+    cursor: pointer;
+    height: 14px;
+    margin-right: -20px;
+    padding: 20px;
+    position: relative;
+    transition: opacity 0.2s ease;
+}
+
+.nav-mobile-toggle:hover {
+    opacity: 0.6;
+}
+
+.nav-mobile-toggle-inner {
+    position: relative;
+    width: 22px;
+}
+
+.nav-mobile-toggle-inner,
+.nav-mobile-toggle-inner:before,
+.nav-mobile-toggle-inner:after {
+    background-color: #fff;
+    height: 1px;
+    width: 22px;
+}
+
+.nav-mobile-toggle-inner:before,
+.nav-mobile-toggle-inner:after {
+    content: '';
+    left: 0;
+    position: absolute;
     width: 100%;
 }
 
+.nav-mobile-toggle-inner:before {
+    top: -6px;
+}
+
+.nav-mobile-toggle-inner:after {
+    top: 6px;
+}
+
 @media (min-width: 800px) {
+    .logo,
+    .nav {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
     .logo {
         width: 171px;
     }
 
     .nav {
+        opacity: 1;
+        position: static;
         text-align: right;
+        visibility: visible;
         width: -webkit-calc(100% - 171px);
         width:         calc(100% - 171px);
+    }
+
+    .nav a {
+        font-size: 0.8em;
+        top: 3px;
+    }
+
+    .nav a:last-child {
+        margin-right: -20px;
+    }
+
+    .nav-mobile-toggle {
+        display: none;
     }
 }
 
