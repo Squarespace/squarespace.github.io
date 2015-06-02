@@ -243,6 +243,7 @@ h1, h2, h3, h4 {
  ************************/
 
 .intro {
+    background-color: rgba(20, 20, 20, 0.95);
     color: #fff;
     margin-bottom: 30px;
     padding: 120px 0 100px;
@@ -251,7 +252,6 @@ h1, h2, h3, h4 {
 }
 
     .intro-background {
-        background-image: url('../images/background-image.png');
         background-position: 50% 80%;
         background-size: cover;
         height: 100%;
@@ -260,6 +260,35 @@ h1, h2, h3, h4 {
         top: 0;
         width: 100%;
         z-index: -1;
+    }
+
+    /* Non-retina small screens. */
+    .intro-background {
+        background-image: url('../images/background-image-500.png');
+    }
+    /* Retina small screens. */
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+        .intro-background {
+            background-image: url('../images/background-image-1000.png');
+        }
+    }
+    /* Non-retina medium screens. */
+    @media (min-width: 750px) {
+        .intro-background {
+            background-image: url('../images/background-image-1000.png');
+        }
+    }
+    /* Retina medium screens. */
+    @media (min-width: 750px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 750px) and (min-resolution: 192dpi) {
+        .intro-background {
+            background-image: url('../images/background-image-1500.png');
+        }
+    }
+    /* All large screens, retina or otherwise. */
+    @media (min-width: 1250px) {
+        .intro-background {
+            background-image: url('../images/background-image-1500.png');
+        }
     }
 
     .intro h1 {
@@ -298,7 +327,7 @@ h1, h2, h3, h4 {
  ************************/
 
 .projects {
-    margin: 0 auto 200px;
+    margin: 0 auto;
     max-width: 1300px;
 }
 

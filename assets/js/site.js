@@ -33,7 +33,8 @@
     var classRegexp = new RegExp(classString, 'g');
 
     if (el.className.indexOf(classString) > -1) {
-      el.className = el.className.replace(classRegexp, '');
+      el.className = el.className.replace(classRegexp, '')
+        .replace(/\s/, '');
     } else {
       el.className += ' ' + classString;
     }
