@@ -1,0 +1,6 @@
+
+repos:
+ - base-template
+ - jersey2-guice
+ - graphite-tools
+

@@ -2,6 +2,7 @@
 
 # builds the squarespace.github.io static site
 
+import argparse
 import codecs
 import getpass
 import os
@@ -18,10 +19,22 @@ NOTE: This file is auto-generated. Please edit templates/index.html and rebuild.
 
 '''
 
+EPILOG = '''
+
+ download - refresh the repository information from github
+ build    - regenerate the site from the template
+
+'''
+
+REPO_CACHE = '_repocache.yml'
+
+COMMANDS = ('download', 'build')
+
 E_ERROR = 'An error occurred: %s\n'
 E_IMPORT = 'Failed to locate a module: %s\n'
 E_LOGIN = 'Failed to login to Github: %s\n'
 E_NOREPO = 'Unknown repository: %s\n'
+E_NODATA = 'You must run the "download" command first'
 E_RATELIM = 'NOTE: rate limiting of %s calls per minute is in effect..\n\n'
 E_RUNPIP = 'You may need to run "pip install -r requirements.txt"\n'
 
@@ -48,6 +61,7 @@ try:
     from github import Github, GithubException, UnknownObjectException
     from jinja2 import Environment
     import requests
+    import yaml
 except ImportError, e:
     fail((E_IMPORT % e) + E_RUNPIP)
 
@@ -89,21 +103,59 @@ def fetch_repos(client, names):
             name=repo.name.replace('-', ' ').title(),
             homepage=repo.homepage,
             url=repo.html_url,
-            description=repo.description)
+            description=repo.description,
+            stars=repo.stargazers_count,
+            forks=repo.forks_count,
+            language=repo.language)
 
 
-def main():
+def parse_args():
+    formatter = argparse.ArgumentDefaultsHelpFormatter
+    parser = argparse.ArgumentParser('rebuild', epilog=EPILOG,
+        formatter_class=formatter)
+    parser.add_argument('cmd', choices=COMMANDS, default='build',
+        nargs='?', help='command to execute')
 
-    # contact github, fetch repository info
+    return parser.parse_args()
+
+    subs = parser.add_subparsers(dest='cmd')
+
+    sub = subs.add_parser('download',
+        help='Download repository information from Github',
+        formatter_class=formatter)
+
+    sub = subs.add_parser('build',
+        help='Build the index from the template',
+        formatter_class=formatter)
+
+    return parser.parse_args()
+
+
+def do_download():
     client = login()
-    names = readlines(rootpath('repos.txt'))
-    repos = list(fetch_repos(client, names))
+    config = yaml.load(open(rootpath('repos.yml'), 'rb'))
+    repos = list(fetch_repos(client, config['repos']))
+    yaml.dump(repos, open(REPO_CACHE, 'wb'))
 
+
+def do_build():
+    if not os.path.exists(REPO_CACHE):
+        fail(E_NODATA)
+    repos = yaml.load(open(REPO_CACHE, 'rb'))
+    
     # rebuild index
     source = read(rootpath('templates', 'index.html'))
     template = Environment().from_string(source)
     result = template.render(repos=repos, warning=WARNING)
     write(rootpath('index.html'), result)
+
+
+def main():
+    args = parse_args()
+    if args.cmd == 'download':
+        do_download()
+    elif args.cmd == 'build':
+        do_build()
 
 
 if __name__ == '__main__':
