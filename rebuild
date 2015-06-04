@@ -5,6 +5,7 @@
 import argparse
 import codecs
 import getpass
+import json
 import os
 import sys
 import traceback
@@ -26,7 +27,7 @@ EPILOG = '''
 
 '''
 
-REPO_CACHE = '_repocache.yml'
+REPO_CACHE = '_repocache.json'
 
 COMMANDS = ('download', 'build')
 
@@ -135,13 +136,13 @@ def do_download():
     client = login()
     config = yaml.load(open(rootpath('repos.yml'), 'rb'))
     repos = list(fetch_repos(client, config['repos']))
-    yaml.dump(repos, open(REPO_CACHE, 'wb'))
+    json.dump(repos, open(REPO_CACHE, 'wb'), indent=2, sort_keys=1)
 
 
 def do_build():
     if not os.path.exists(REPO_CACHE):
         fail(E_NODATA)
-    repos = yaml.load(open(REPO_CACHE, 'rb'))
+    repos = json.load(open(REPO_CACHE, 'rb'))
     
     # rebuild index
     source = read(rootpath('templates', 'index.html'))

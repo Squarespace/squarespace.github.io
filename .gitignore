@@ -1,5 +1,5 @@
 
 *.swp
 .DS_Store
-_repocache.yml
+_repocache.json
 
