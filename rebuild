@@ -145,6 +145,7 @@ def do_build():
     repos = json.load(open(REPO_CACHE, 'rb'))
     
     # rebuild index
+    info('Rebuilding index.html..\n')
     source = read(rootpath('templates', 'index.html'))
     template = Environment().from_string(source)
     result = template.render(repos=repos, warning=WARNING)

@@ -1,6 +1,8 @@
 
 repos:
  - base-template
- - jersey2-guice
  - graphite-tools
+ - jersey2-guice
+ - less-compiler
+ - template-compiler
 
