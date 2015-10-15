@@ -5,4 +5,5 @@ repos:
  - jersey2-guice
  - less-compiler
  - template-compiler
+ - pouchdb-lru-cache
 
