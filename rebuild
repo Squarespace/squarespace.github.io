@@ -86,10 +86,10 @@ def login():
         fail(E_LOGIN % e)
 
 
-def fetch_repos(client, names):
-    for name in names:
+def fetch_repos(client, rows):
+    for row in rows:
         try:
-            path = 'squarespace/' + name
+            path = 'squarespace/' + row['url']
             info('Fetching information for %r repository..\n' % path)
             repo = client.get_repo(path)
         except UnknownObjectException, e:
@@ -101,7 +101,7 @@ def fetch_repos(client, names):
             fail(E_ERROR % err)
 
         yield dict(
-            name=repo.name.replace('-', ' ').title(),
+            name=row['name'],
             homepage=repo.homepage,
             url=repo.html_url,
             description=repo.description,

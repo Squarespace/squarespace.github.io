@@ -1,9 +1,15 @@
 
 repos:
- - base-template
- - graphite-tools
- - jersey2-guice
- - less-compiler
- - template-compiler
- - pouchdb-lru-cache
+ - name: Base Template
+   url: base-template
+ - name: Graphite Tools
+   url: graphite-tools
+ - name: Jersey2 Guice
+   url: jersey2-guice
+ - name: Less Compiler
+   url: less-compiler
+ - name: Template Compiler
+   url: template-compiler
+ - name: PouchDB LRU Cache
+   url: pouchdb-lru-cache
 
