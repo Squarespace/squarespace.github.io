@@ -1,5 +1,9 @@
 
 repos:
+ - name: pgbedrock Postgres Permissions
+   url: pgbedrock
+ - name: datasheets for Google Sheets
+   url: datasheets
  - name: Base Template
    url: base-template
  - name: Graphite Tools
