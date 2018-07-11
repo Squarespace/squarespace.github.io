@@ -2,7 +2,7 @@
 Squarespace Github site
 -----------------------
 
-To add a project, edit `repos.txt`.
+To add a project, edit `repos.yml`.
 
 To generate the static site:
 
