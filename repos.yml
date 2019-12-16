@@ -2,7 +2,7 @@
 repos:
  - name: pgbedrock Postgres Permissions
    url: pgbedrock
- - name: Type-safe iOS table and collection views in Swift.
+ - name: Simple Source
    url: simple-source
  - name: datasheets for Google Sheets
    url: datasheets
