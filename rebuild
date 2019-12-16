@@ -69,14 +69,13 @@ except ImportError, e:
 
 def login():
     info('Authenticating to Github. (blank == anonymous)\n')
-    username = raw_input('username: ')
-    if username:
-        password = getpass.getpass('password: ')
+    info('Use a personal access token for authenticating (https://github.com/settings/tokens)\n')
+    pat = getpass.getpass('personal access token: ')
     try:
-        if not username:
+        if not pat:
             client = Github()
         else:
-            client = Github(username, password)
+            client = Github(pat)
         _, limit = client.rate_limiting
         if limit:
             info(E_RATELIM % limit)
