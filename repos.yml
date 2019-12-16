@@ -2,6 +2,8 @@
 repos:
  - name: pgbedrock Postgres Permissions
    url: pgbedrock
+ - name: Type-safe iOS table and collection views in Swift.
+   url: simple-source
  - name: datasheets for Google Sheets
    url: datasheets
  - name: Base Template
@@ -14,6 +16,3 @@ repos:
    url: less-compiler
  - name: Template Compiler
    url: template-compiler
- - name: PouchDB LRU Cache
-   url: pouchdb-lru-cache
-
